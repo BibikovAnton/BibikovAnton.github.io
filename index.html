@@ -29,17 +29,17 @@
             display: flex; /* Показываем активный экран */
         }
 
-        #game {
-            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона игрового экрана с прозрачностью */
-            z-index: 1;
+        #game, #task, #invite {
+            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона с прозрачностью */
+            text-align: center; /* Выравнивание текста по центру */
+            padding: 20px; /* Поля вокруг содержимого */
+            box-sizing: border-box; /* Учитываем padding в общей ширине */
+            position: relative; /* Относительное позиционирование */
         }
 
-        #task {
-            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона экрана заданий с прозрачностью */
-        }
-
-        #invite {
-            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона экрана Space Invite с прозрачностью */
+        #game img, #task img, #invite img {
+            max-width: 100%; /* Максимальная ширина изображения по контейнеру */
+            margin-top: 20px; /* Отступ сверху */
         }
 
         #balance {
@@ -49,7 +49,7 @@
         }
 
         #profit-button {
-            font-size: 18px;
+            font-size: 20px;
             padding: 10px 20px;
             background-color: #4caf50;
             color: white;
@@ -67,11 +67,6 @@
 
         #profit-button.disabled {
             opacity: 0.5; /* Уменьшаем прозрачность, когда кнопка disabled */
-        }
-
-        #coin-img {
-            width: 300px; /* Установка размера монеты */
-            margin-top: 20px; /* Отступ сверху */
         }
 
         .coin {
@@ -127,7 +122,7 @@
         }
 
         .bottom-button {
-            font-size: 18px;
+            font-size: 12px;
             padding: 10px 20px;
             background-color: transparent;
             color: white;
@@ -142,8 +137,8 @@
         }
 
         .bottom-button img {
-            width: 40px; /* Размер изображения в кнопке */
-            height: 40px;
+            width: 35px; /* Размер изображения в кнопке */
+            height: 35px;
             margin-bottom: 2px; /* Отступ от текста */
         }
 
@@ -185,12 +180,12 @@
         }
 
         /* Стили для экрана Task */
-        #task h1 {
+        #task h1, #invite h1 {
             color: white;
             margin-bottom: 20px;
         }
 
-        #task p {
+        #task p, #invite p {
             color: white;
             font-size: 18px;
             margin-bottom: 20px;
@@ -207,6 +202,11 @@
             cursor: pointer;
             text-decoration: none;
         }
+#game img, #task img, #invite img {
+    max-width: 230px; /* Установка максимальной ширины в 230px */
+    margin-top: 20px; /* Оставляем отступ сверху, как есть */
+}
+
 
         .telegram-button img {
             width: 24px;
@@ -249,11 +249,11 @@
     <!-- Контейнер для кнопок внизу -->
     <div id="bottom-container">
         <button class="bottom-button active" onclick="openScreen('game')" id="space-button">
-            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/space-shuttle-7865112-6308161.png?f=webp" alt="Space Icon">
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/space-shuttle-7865112-6308161.png" alt="Space Icon">
             <span>Space</span>
         </button>
         <button class="bottom-button" onclick="openScreen('task')" id="task-button">
-            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/task-9233291-7588724.png?f=webp" alt="Task Icon">
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/task-9233291-7588724.png" alt="Task Icon">
             <span>Task</span>
         </button>
         <button class="bottom-button" onclick="openScreen('invite')" id="invite-button">
@@ -377,4 +377,6 @@
     </script>
 </body>
 </html>
+
+
 
