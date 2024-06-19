@@ -9,22 +9,43 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #212121;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             overflow: hidden; /* Скрытие монет, выходящих за пределы экрана */
         }
 
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: none; /* Изначально скрываем все экраны кроме первого */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .screen.active {
+            display: flex; /* Показываем активный экран */
+        }
+
         #game {
-            text-align: center;
-            color: white;
-            position: relative; /* Для позиционирования монеток */
+            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона игрового экрана с прозрачностью */
+            z-index: 1;
+        }
+
+        #task {
+            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона экрана заданий с прозрачностью */
+        }
+
+        #invite {
+            background-color: rgba(33, 33, 33, 0.8); /* Цвет фона экрана Space Invite с прозрачностью */
         }
 
         #balance {
             font-size: 24px;
             margin-bottom: 20px;
+            color: white;
         }
 
         #profit-button {
@@ -49,7 +70,7 @@
         }
 
         #coin-img {
-            width: 250px; /* Установка размера монеты */
+            width: 300px; /* Установка размера монеты */
             margin-top: 20px; /* Отступ сверху */
         }
 
@@ -61,52 +82,202 @@
             background-size: cover;
             background-repeat: no-repeat;
             animation: coin-fall 2s linear;
+            z-index: 2;
         }
 
         @keyframes coin-fall {
-            0% { transform: translateY(-100px) rotate(0deg); }
-            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(-50px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .star {
+            position: absolute;
+            background: gray; /* Серый цвет */
+            border-radius: 50%;
+            opacity: 0;
+            animation: star-fade 3s linear infinite; /* Меньшее время анимации */
+        }
+
+        @keyframes star-fade {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); } /* Увеличенный размер звездочки */
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        #stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Стили для кнопок внизу */
+        #bottom-container {
+            position: fixed;
+            bottom: 20px; /* Отступ от нижнего края */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+            z-index: 2; /* Поверх остального контента */
+        }
+
+        .bottom-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bottom-button img {
+            width: 40px; /* Размер изображения в кнопке */
+            height: 40px;
+            margin-bottom: 2px; /* Отступ от текста */
+        }
+
+        .bottom-button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .bottom-button.active {
+            color: white; /* Цвет текста белый */
+            background-color: rgba(255, 255, 255, 0.2); /* Полупрозрачный белый фон */
+        }
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(33, 33, 33, 0.9); /* Полупрозрачный черный фон */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid yellow; /* Yellow */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Стили для экрана Task */
+        #task h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        #task p {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .telegram-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(128, 128, 128, 0.5); /* Полупрозрачный серый цвет */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .telegram-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="game">
+    <div id="loading-screen">
+        <div class="loader"></div>
+    </div>
+
+    <div id="stars"></div>
+
+    <!-- Экран игры -->
+    <div id="game" class="screen active">
         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/kazakhstani-tenge-gold-coin-8973944-7281015.png" id="coin-img" alt="Coin Image">
-        
         <div id="balance">Balance: $0</div>
         <button id="profit-button" onclick="handleButtonClick()">Collect Coins</button>
     </div>
 
-    <script>
-        let balance = parseInt(localStorage.getItem('balance')) || 0; // Загрузка сохраненного баланса или установка 0
-        let timerValue = 0; // Изначально установлено на 0, чтобы можно было сразу собрать монеты
-        let timerInterval = null;
+    <!-- Экран заданий -->
+    <div id="task" class="screen">
+        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/kazakhstani-tenge-gold-coin-8973944-7281015.png" id="coin-img" alt="Coin Image">
+        <h1>Task</h1>
+        <p>Заработайте больше монет</p>
+        <a href="https://telegram.org/" class="telegram-button" target="_blank">
+            <img src="https://image.flaticon.com/icons/png/512/2111/2111646.png" alt="Telegram Icon">
+            Присоединяйтесь к нашему telegram каналу
+        </a>
+    </div>
 
-        // Function to update the balance on the UI and in localStorage
+    <!-- Экран Space Invite -->
+    <div id="invite" class="screen">
+        <h1>Space Invite</h1>
+        <!-- Ваш контент для экрана Space Invite -->
+    </div>
+
+    <!-- Контейнер для кнопок внизу -->
+    <div id="bottom-container">
+        <button class="bottom-button active" onclick="openScreen('game')" id="space-button">
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/space-shuttle-7865112-6308161.png?f=webp" alt="Space Icon">
+            <span>Space</span>
+        </button>
+        <button class="bottom-button" onclick="openScreen('task')" id="task-button">
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/task-9233291-7588724.png?f=webp" alt="Task Icon">
+            <span>Task</span>
+        </button>
+        <button class="bottom-button" onclick="openScreen('invite')" id="invite-button">
+            <img src="https://cdn-icons-png.freepik.com/512/5189/5189306.png" alt="Coin Icon">
+            <span>Invite</span>
+        </button>
+    </div>
+
+    <script>
+        let balance = parseInt(localStorage.getItem('balance')) || 0; // Retrieve balance from localStorage or set to 0
+        let timerValue = 0;
+        let timerInterval;
+
+        // Function to update balance
         function updateBalance() {
             document.getElementById('balance').innerText = `Balance: $${balance}`;
-            localStorage.setItem('balance', balance.toString());
+            localStorage.setItem('balance', balance); // Save balance to localStorage
         }
 
-        // Function to update the timer on the UI
-        function updateTimer() {
-            if (timerValue === 0) {
-                document.getElementById('profit-button').textContent = 'Собрать';
-                document.getElementById('profit-button').classList.remove('disabled');
-                document.getElementById('profit-button').style.backgroundColor = '#4caf50'; // Восстанавливаем цвет кнопки
-            } else {
-                document.getElementById('profit-button').textContent = `${timerValue} seconds`;
-                document.getElementById('profit-button').classList.add('disabled');
-                document.getElementById('profit-button').style.backgroundColor = 'transparent'; // Делаем кнопку прозрачной
-            }
-        }
-
-        // Function to start the timer countdown
+        // Function to start the timer
         function startTimer() {
             if (timerValue === 0) {
-                timerValue = 5; // Установка времени для следующей сборки монет
-                updateTimer();
-                document.getElementById('profit-button').disabled = true; // Отключение кнопки сбора монет до завершения времени
+                timerValue = 10; // Установка таймера на 10 секунд
+                document.getElementById('profit-button').disabled = true; // Отключение кнопки сбора монет
                 document.getElementById('profit-button').classList.add('disabled');
                 timerInterval = setInterval(function() {
                     timerValue--;
@@ -118,6 +289,11 @@
                     }
                 }, 1000);
             }
+        }
+
+        // Function to update timer display
+        function updateTimer() {
+            document.getElementById('profit-button').innerText = `Collect Coins (${timerValue}s)`;
         }
 
         // Function to handle button click
@@ -136,8 +312,8 @@
         function createCoinAnimation() {
             const coin = document.createElement('div');
             coin.className = 'coin';
-            coin.style.left = `${Math.random() * (window.innerWidth - 290)}px`; // Рандомная позиция по горизонтали
-            coin.style.top = `${Math.random() * -300 - 10}px`; // Рандомная позиция по вертикали (над экраном)
+            coin.style.left = `${Math.random() * (window.innerWidth - 30)}px`; // Рандомная позиция по горизонтали
+            coin.style.top = `${Math.random() * -50}px`; // Рандомная позиция по вертикали (над экраном)
             document.getElementById('game').appendChild(coin);
 
             setTimeout(() => {
@@ -145,8 +321,60 @@
             }, 2000); // 2000ms - время анимации, синхронизируется с CSS
         }
 
+        // Function to create star animation
+        function createStarAnimation() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 10 + 5; // Random size between 5px and 15px
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+            star.style.top = `${Math.random() * 100}vh`; // Random vertical position
+
+            document.getElementById('stars').appendChild(star);
+
+            setTimeout(() => {
+                star.remove(); // Remove star after its animation ends
+            }, 3000); // Duration of star animation
+        }
+
+        // Create multiple stars at intervals
+        setInterval(createStarAnimation, 150);
+
+        // Function to open different screens
+        function openScreen(screenId) {
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Remove active class from bottom buttons
+            const bottomButtons = document.querySelectorAll('.bottom-button');
+            bottomButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected screen
+            const selectedScreen = document.getElementById(screenId);
+            selectedScreen.classList.add('active');
+
+            // Add active class to the corresponding bottom button
+            const activeButton = document.getElementById(`${screenId}-button`);
+            activeButton.classList.add('active');
+        }
+
         // Initial start of the timer
         updateBalance(); // Обновляем баланс при загрузке страницы
+
+        // Function to hide the loading screen
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').style.display = 'none';
+        }
+
+        // Show loading screen for 1 second
+        setTimeout(hideLoadingScreen, 1000);
     </script>
 </body>
 </html>
+
