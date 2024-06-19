@@ -125,7 +125,7 @@
             if (timerValue === 0) {
                 balance += 10; // Собираем $10 монет
                 updateBalance();
-                for (let i = 0; i < 26; i++) {
+                for (let i = 0; i < 35; i++) {
                     setTimeout(() => createCoinAnimation(), i * 100); // Создаем анимацию падения монеты с разной задержкой
                 }
                 startTimer(); // Начинаем отсчет времени снова
@@ -136,8 +136,8 @@
         function createCoinAnimation() {
             const coin = document.createElement('div');
             coin.className = 'coin';
-            coin.style.left = `${Math.random() * (window.innerWidth - 30)}px`; // Рандомная позиция по горизонтали
-            coin.style.top = `${Math.random() * -300 - 30}px`; // Рандомная позиция по вертикали (над экраном)
+            coin.style.left = `${Math.random() * (window.innerWidth - 290)}px`; // Рандомная позиция по горизонтали
+            coin.style.top = `${Math.random() * -300 - 10}px`; // Рандомная позиция по вертикали (над экраном)
             document.getElementById('game').appendChild(coin);
 
             setTimeout(() => {
