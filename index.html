@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приветствие к Coin Collector Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #212121;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Скрытие монет, выходящих за пределы экрана */
+        }
+
+        #game {
+            text-align: center;
+            color: white;
+            position: relative; /* Для позиционирования монеток */
+        }
+
+        #balance {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #profit-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s, opacity 0.3s; /* Добавлен transition для background-color и opacity */
+            opacity: 1; /* Изначально кнопка видима */
+        }
+
+        #profit-button:hover {
+            background-color: #45a049;
+        }
+
+        #profit-button.disabled {
+            opacity: 0.5; /* Уменьшаем прозрачность, когда кнопка disabled */
+        }
+
+        #coin-img {
+            width: 250px; /* Установка размера монеты */
+            margin-top: 20px; /* Отступ сверху */
+        }
+
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://cdn3d.iconscout.com/3d/premium/thumb/kazakhstani-tenge-gold-coin-8973944-7281015.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            animation: coin-fall 2s linear;
+        }
+
+        @keyframes coin-fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/kazakhstani-tenge-gold-coin-8973944-7281015.png" id="coin-img" alt="Coin Image">
+        
+        <div id="balance">Balance: $0</div>
+        <button id="profit-button" onclick="handleButtonClick()">Collect Coins</button>
+    </div>
+
+    <script>
+        let balance = parseInt(localStorage.getItem('balance')) || 0; // Загрузка сохраненного баланса или установка 0
+        let timerValue = 0; // Изначально установлено на 0, чтобы можно было сразу собрать монеты
+        let timerInterval = null;
+
+        // Function to update the balance on the UI and in localStorage
+        function updateBalance() {
+            document.getElementById('balance').innerText = `Balance: $${balance}`;
+            localStorage.setItem('balance', balance.toString());
+        }
+
+        // Function to update the timer on the UI
+        function updateTimer() {
+            if (timerValue === 0) {
+                document.getElementById('profit-button').textContent = 'Собрать';
+                document.getElementById('profit-button').classList.remove('disabled');
+                document.getElementById('profit-button').style.backgroundColor = '#4caf50'; // Восстанавливаем цвет кнопки
+            } else {
+                document.getElementById('profit-button').textContent = `${timerValue} seconds`;
+                document.getElementById('profit-button').classList.add('disabled');
+                document.getElementById('profit-button').style.backgroundColor = 'transparent'; // Делаем кнопку прозрачной
+            }
+        }
+
+        // Function to start the timer countdown
+        function startTimer() {
+            if (timerValue === 0) {
+                timerValue = 5; // Установка времени для следующей сборки монет
+                updateTimer();
+                document.getElementById('profit-button').disabled = true; // Отключение кнопки сбора монет до завершения времени
+                document.getElementById('profit-button').classList.add('disabled');
+                timerInterval = setInterval(function() {
+                    timerValue--;
+                    updateTimer();
+                    if (timerValue === 0) {
+                        clearInterval(timerInterval);
+                        document.getElementById('profit-button').disabled = false; // Включение кнопки сбора монет после завершения времени
+                        document.getElementById('profit-button').classList.remove('disabled');
+                    }
+                }, 1000);
+            }
+        }
+
+        // Function to handle button click
+        function handleButtonClick() {
+            if (timerValue === 0) {
+                balance += 10; // Собираем $10 монет
+                updateBalance();
+                for (let i = 0; i < 26; i++) {
+                    setTimeout(() => createCoinAnimation(), i * 100); // Создаем анимацию падения монеты с разной задержкой
+                }
+                startTimer(); // Начинаем отсчет времени снова
+            }
+        }
+
+        // Function to create coin animation
+        function createCoinAnimation() {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.style.left = `${Math.random() * (window.innerWidth - 30)}px`; // Рандомная позиция по горизонтали
+            coin.style.top = `${Math.random() * -300 - 30}px`; // Рандомная позиция по вертикали (над экраном)
+            document.getElementById('game').appendChild(coin);
+
+            setTimeout(() => {
+                coin.remove(); // Удаление монетки через некоторое время после анимации
+            }, 2000); // 2000ms - время анимации, синхронизируется с CSS
+        }
+
+        // Initial start of the timer
+        updateBalance(); // Обновляем баланс при загрузке страницы
+    </script>
+</body>
+</html>
