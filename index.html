@@ -39,7 +39,7 @@
 
         #game img, #task img, #invite img {
             max-width: 100%; /* Максимальная ширина изображения по контейнеру */
-            margin-top: 20px; /* Отступ сверху */
+            margin-top: 0px; /* Отступ сверху */
         }
 
         #balance {
@@ -49,7 +49,8 @@
         }
 
         #profit-button {
-            font-size: 20px;
+            
+            font-size: 30px;
             padding: 10px 20px;
             background-color: #4caf50;
             color: white;
@@ -58,7 +59,7 @@
             cursor: pointer;
             outline: none;
             transition: background-color 0.3s, opacity 0.3s; /* Добавлен transition для background-color и opacity */
-            opacity: 1; /* Изначально кнопка видима */
+            opacity: 0.4; /* Изначально кнопка видима */
         }
 
         #profit-button:hover {
@@ -66,7 +67,7 @@
         }
 
         #profit-button.disabled {
-            opacity: 0.5; /* Уменьшаем прозрачность, когда кнопка disabled */
+            opacity: 1; /* Уменьшаем прозрачность, когда кнопка disabled */
         }
 
         .coin {
@@ -112,8 +113,8 @@
         /* Стили для кнопок внизу */
         #bottom-container {
             position: fixed;
-            bottom: 20px; /* Отступ от нижнего края */
-            width: 100%;
+            bottom: 70px; /* Отступ от нижнего края */
+            width: 90%;
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -377,6 +378,7 @@
     </script>
 </body>
 </html>
+
 
 
 
